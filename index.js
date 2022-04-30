@@ -23,18 +23,63 @@ async function run() {
     const itemsCollections = client.db("Inventory").collection("Items");
 
     // get all items
-    app.get("/items", async (req, res) => {
+    app.get("/inventories", async (req, res) => {
       const query = {};
       const result = await itemsCollections.find(query).toArray();
       res.send(result);
     });
 
-    app.get("/items/:id", async (req, res) => {
+    // get item by email 
+    app.get('/my-items' , async(req , res)=>{
+
+      const email = req.query.email;
+      const query = {email}
+      const result = await itemsCollections.find(query).toArray()
+      res.send(result)
+
+    })
+    // query by id 
+    app.get("/inventory/:id", async (req, res) => {
       const id = req.params.id;
       const query = {_id:ObjectId(id)};
       const result = await itemsCollections.findOne(query);
       res.send(result);
     });
+
+    
+    // delete item
+    app.delete('/inventory/:id' , async(req , res)=>{
+      const id = req.params.id;
+      const query = {_id:ObjectId(id)}
+      const result = await itemsCollections.deleteOne(query)
+      res.send(result)
+    });
+
+    // add items 
+    app.post('/add-items' , async(req , res)=>{
+        const query = req.body;
+        const result = await itemsCollections.insertOne(query);
+        res.send(result)
+    })
+
+
+    // Update 
+    app.put('/inventory/:id', async(req , res)=>{
+      const id = req.params.id ;
+      const query = {_id:ObjectId(id)}
+      const itemsBody = req.body.quantity;
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          quantity : itemsBody
+        },
+      };
+      console.log(itemsBody, updateDoc)
+      const result = await itemsCollections.updateOne(query, updateDoc, options);
+      res.send(result)
+    });
+
+
 
   } finally {
     //   await client.close();
