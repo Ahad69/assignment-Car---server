@@ -75,7 +75,7 @@ async function run() {
         },
       };
       console.log(itemsBody, updateDoc)
-      const result = await itemsCollections.updateOne(query, updateDoc, options);
+      const result = await itemsCollections.updateMany(query, updateDoc, options);
       res.send(result)
     });
 
