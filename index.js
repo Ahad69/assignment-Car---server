@@ -23,10 +23,10 @@ function verifyToken(req , res , next){
     if(err){
       return res.status(403).send({message : 'Forbidden'})
     }
-    
+   
+   
     req.decoded = decoded;
   })
-  
   next()
 }
 
@@ -69,9 +69,7 @@ async function run() {
         const result = await itemsCollections.find(query).toArray()
         res.send(result)
       }
-      else{
-        res.send(403)
-      }
+      
     })
 
 
