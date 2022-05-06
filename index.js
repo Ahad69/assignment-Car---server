@@ -28,6 +28,8 @@ function verifyToken(req , res , next){
   next()
 }
 
+
+
 // database
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.mxcn0.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
@@ -59,12 +61,14 @@ async function run() {
     });
 
     // get item by email 
-    app.get('/my-items'  , verifyToken ,  async(req , res)=>{
+    app.get('/my-items', verifyToken ,  async(req , res)=>{
       const decodedEmail = req.decoded.email
       const email = req.query.email;
+      // console.log(email)
       // const query = {email}
       // const result = await itemsCollections.find(query).toArray()
       // res.send(result)
+    
 
       if(email === decodedEmail){
         const query = {email}
@@ -111,7 +115,6 @@ async function run() {
           quantity : itemsBody
         },
       };
-      console.log(itemsBody, updateDoc)
       const result = await itemsCollections.updateMany(query, updateDoc, options);
       res.send(result)
     });
