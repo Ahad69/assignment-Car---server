@@ -44,9 +44,10 @@ async function run() {
     await client.connect();
     const itemsCollections = client.db("Inventory").collection("Items");
 
-    app.post('/signin' , async(req , res)=>{
+    app.post('/signup' , async(req , res)=>{
         
         const user = req.body;
+        
         const accessToken = jwt.sign(user , process.env.TOKEN , {
           expiresIn: '1d'
         });
@@ -64,12 +65,11 @@ async function run() {
     app.get('/my-items', verifyToken ,  async(req , res)=>{
       const decodedEmail = req.decoded.email
       const email = req.query.email;
+      console.log(email , decodedEmail)
       // console.log(email)
       // const query = {email}
       // const result = await itemsCollections.find(query).toArray()
       // res.send(result)
-    
-
       if(email === decodedEmail){
         const query = {email}
         const result = await itemsCollections.find(query).toArray()
